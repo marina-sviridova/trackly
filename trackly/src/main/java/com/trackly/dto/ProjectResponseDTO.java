@@ -1,6 +1,5 @@
-package com.trackly.model;
+package com.trackly.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,23 +8,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Project {
-    @Id
-    @GeneratedValue
+public class ProjectResponseDTO {
     Long id;
     String name;
-    @ManyToOne
-    User manager;
+    Long managerId;
     LocalDateTime createdAt;
     LocalDateTime deadline;
-    @OneToMany(mappedBy = "project")
-    List<Task> tasks;
-    @ManyToMany
-    List<User> members;
+    List<Long> tasksIds;
+    List<Long> membersIds;
     boolean active;
 }
