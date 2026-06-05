@@ -23,7 +23,7 @@ public class Project {
     User manager;
     LocalDateTime createdAt;
     LocalDateTime deadline;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks;
     @ManyToMany
     List<User> members;

@@ -6,20 +6,43 @@ import com.trackly.service.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/projects")
 public class ProjectController {
     private final ProjectService projectService;
 
-    public ProjectController (ProjectService projectService) {
+    public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
     }
 
-    @PostMapping("/projects")
+    @PostMapping()
     public ResponseEntity<ProjectResponseDTO> createProject(@Valid @RequestBody ProjectRequestDTO projectRequestDTO) {
         return new ResponseEntity<>(projectService.createProject(projectRequestDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectResponseDTO> updateProject(@PathVariable Long id,
+                                                            @Valid @RequestBody ProjectRequestDTO projectRequestDTO) {
+        return new ResponseEntity<>(projectService.updateProject(id, projectRequestDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectResponseDTO> getProjectsById(@PathVariable Long id) {
+        return new ResponseEntity<>(projectService.getProjectById(id), HttpStatus.OK);
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
+        return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProjectById(@PathVariable Long id) {
+        projectService.deleteProjectById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
