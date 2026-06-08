@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 public class TaskMapper {
 
     public Task taskRequestDtoToTask(TaskRequestDTO taskRequestDTO,
-                                Project project,
-                                User createdBy,
-                                User assignee) {
+                                     Project project,
+                                     User createdBy,
+                                     User assignee) {
         return Task.builder()
                 .name(taskRequestDTO.getName())
                 .description(taskRequestDTO.getDescription())
@@ -24,9 +24,7 @@ public class TaskMapper {
                 .assignee(assignee)
                 .status(taskRequestDTO.getStatus())
                 .priority(taskRequestDTO.getPriority())
-                .createdAt(LocalDateTime.now())
                 .deadline(taskRequestDTO.getDeadline())
-                .updatedAt(LocalDateTime.now())
                 .build();
     }
 

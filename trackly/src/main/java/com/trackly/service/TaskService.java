@@ -16,7 +16,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -69,7 +68,6 @@ public class TaskService {
         updatedTask.setStatus(taskRequestDTO.getStatus());
         updatedTask.setPriority(taskRequestDTO.getPriority());
         updatedTask.setDeadline(taskRequestDTO.getDeadline());
-        updatedTask.setUpdatedAt(LocalDateTime.now());
         return taskMapper.taskToTaskResponseDto(taskRepository.save(updatedTask));
     }
 

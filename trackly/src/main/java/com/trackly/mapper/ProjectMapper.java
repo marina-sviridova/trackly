@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 public class ProjectMapper {
-    public Project projectRequestDtoToProject (ProjectRequestDTO projectRequestDTO, User manager, List<User> members) {
+    public Project projectRequestDtoToProject(ProjectRequestDTO projectRequestDTO, User manager, List<User> members) {
 
         return Project.builder()
                 .name(projectRequestDTO.getName())
@@ -25,7 +25,7 @@ public class ProjectMapper {
     }
 
     public ProjectResponseDTO projectToProjectResponseDto(Project project) {
-        return  ProjectResponseDTO.builder()
+        return ProjectResponseDTO.builder()
                 .id(project.getId())
                 .name(project.getName())
                 .managerId(project.getManager().getId())
