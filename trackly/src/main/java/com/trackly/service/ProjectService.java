@@ -9,6 +9,7 @@ import com.trackly.model.Project;
 import com.trackly.model.User;
 import com.trackly.repository.ProjectRepository;
 import com.trackly.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class ProjectService {
         this.projectMapper = projectMapper;
     }
 
+    @Transactional
     public ProjectResponseDTO createProject(ProjectRequestDTO projectRequestDTO) {
         User manager = (User) SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -41,6 +43,7 @@ public class ProjectService {
         return projectMapper.projectToProjectResponseDto(projectRepository.save(project));
     }
 
+    @Transactional
     public ProjectResponseDTO updateProject(Long id, ProjectRequestDTO projectRequestDTO) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
@@ -69,6 +72,7 @@ public class ProjectService {
                 .toList();
     }
 
+    @Transactional
     public void deleteProjectById(Long id) {
         projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
