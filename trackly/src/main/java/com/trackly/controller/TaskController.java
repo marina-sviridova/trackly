@@ -2,12 +2,15 @@ package com.trackly.controller;
 
 import com.trackly.dto.TaskRequestDTO;
 import com.trackly.dto.TaskResponseDTO;
+import com.trackly.model.TaskPriority;
+import com.trackly.model.TaskStatus;
 import com.trackly.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -36,9 +39,14 @@ public class TaskController {
         return new ResponseEntity<>(taskService.getTaskById(id), HttpStatus.OK);
     }
 
-    @GetMapping()
-    public ResponseEntity<List<TaskResponseDTO>> getAllTasks() {
-        return new ResponseEntity<>(taskService.getAllTasks(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<TaskResponseDTO>> getTasks(
+            @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false) Long assigneeId,
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) TaskPriority priority,
+            @RequestParam(required = false) LocalDateTime deadline) {
+        return new ResponseEntity<>(taskService.getTasks(projectId, assigneeId, status, priority, deadline), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
