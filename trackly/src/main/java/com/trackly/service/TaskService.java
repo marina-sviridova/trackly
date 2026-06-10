@@ -12,6 +12,8 @@ import com.trackly.repository.TaskRepository;
 import com.trackly.repository.UserRepository;
 import com.trackly.specification.TaskSpecification;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -78,16 +80,15 @@ public class TaskService {
         return taskMapper.taskToTaskResponseDto(task);
     }
 
-    public List<TaskResponseDTO> getTasks(Long projectId, Long assigneeId, TaskStatus status, TaskPriority priority,
-                                          LocalDateTime deadline) {
+    public Page<TaskResponseDTO> getTasks(Long projectId, Long assigneeId, TaskStatus status, TaskPriority priority,
+                                          LocalDateTime deadline, Pageable pageable) {
         Specification<Task> spec = TaskSpecification.hasProject(projectId)
                 .and(TaskSpecification.hasAssignee(assigneeId))
                 .and(TaskSpecification.hasStatus(status))
                 .and(TaskSpecification.hasPriority(priority))
                 .and(TaskSpecification.deadlineBefore(deadline));
-        return taskRepository.findAll(spec).stream()
-                .map(taskMapper::taskToTaskResponseDto)
-                .toList();
+        return taskRepository.findAll(spec, pageable)
+                .map(taskMapper::taskToTaskResponseDto);
     }
 
     @Transactional

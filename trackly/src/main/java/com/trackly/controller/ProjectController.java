@@ -4,11 +4,11 @@ import com.trackly.dto.ProjectRequestDTO;
 import com.trackly.dto.ProjectResponseDTO;
 import com.trackly.service.ProjectService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
@@ -36,8 +36,8 @@ public class ProjectController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProjectResponseDTO>> getAllProjects() {
-        return new ResponseEntity<>(projectService.getAllProjects(), HttpStatus.OK);
+    public ResponseEntity<Page<ProjectResponseDTO>> getAllProjects(Pageable pageable) {
+        return new ResponseEntity<>(projectService.getAllProjects(pageable), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -6,6 +6,8 @@ import com.trackly.model.TaskPriority;
 import com.trackly.model.TaskStatus;
 import com.trackly.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,13 +42,15 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponseDTO>> getTasks(
+    public ResponseEntity<Page<TaskResponseDTO>> getTasks(
             @RequestParam(required = false) Long projectId,
             @RequestParam(required = false) Long assigneeId,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority,
-            @RequestParam(required = false) LocalDateTime deadline) {
-        return new ResponseEntity<>(taskService.getTasks(projectId, assigneeId, status, priority, deadline), HttpStatus.OK);
+            @RequestParam(required = false) LocalDateTime deadline,
+            Pageable pageable) {
+        return new ResponseEntity<>(taskService.getTasks(projectId, assigneeId, status, priority, deadline, pageable),
+                HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

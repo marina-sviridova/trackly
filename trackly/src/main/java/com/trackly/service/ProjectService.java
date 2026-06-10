@@ -10,6 +10,8 @@ import com.trackly.model.User;
 import com.trackly.repository.ProjectRepository;
 import com.trackly.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -66,10 +68,9 @@ public class ProjectService {
         return projectMapper.projectToProjectResponseDto(project);
     }
 
-    public List<ProjectResponseDTO> getAllProjects() {
-        return projectRepository.findAll().stream()
-                .map(project -> projectMapper.projectToProjectResponseDto(project))
-                .toList();
+    public Page<ProjectResponseDTO> getAllProjects(Pageable pageable) {
+        return projectRepository.findAll(pageable)
+                .map(project -> projectMapper.projectToProjectResponseDto(project));
     }
 
     @Transactional
