@@ -2,6 +2,7 @@ package com.trackly.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -51,6 +52,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new ErrorResponse("Path not found: " + e.getResourcePath(), 404, LocalDateTime.now()),
                 HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationDenied(AuthorizationDeniedException e) {
+        return new ResponseEntity<>(
+                new ErrorResponse("Access denied", 403, LocalDateTime.now()),
+                HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
