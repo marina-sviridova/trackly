@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.time.LocalDateTime;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -35,7 +33,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 //.cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/error").permitAll() // все эндпоинты начинающиеся с /auth/ (регистрация, логин) — открыты для всех
+                        .requestMatchers("/auth/**", "/error",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html").permitAll() // все эндпоинты начинающиеся с /auth/ (регистрация, логин) — открыты для всех
                         .anyRequest().authenticated() // все остальные эндпоинты требуют аутентификации
                 )
                 .exceptionHandling(ex -> ex
