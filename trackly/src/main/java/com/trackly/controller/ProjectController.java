@@ -30,6 +30,16 @@ public class ProjectController {
         return new ResponseEntity<>(projectService.updateProject(id, projectRequestDTO), HttpStatus.OK);
     }
 
+    @PostMapping("/{projectId}/members/{userId}")
+    public ResponseEntity<ProjectResponseDTO> addMember(@PathVariable Long projectId, @PathVariable Long userId) {
+        return new ResponseEntity<>(projectService.addMember(projectId, userId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{projectId}/members/{userId}")
+    public ResponseEntity<ProjectResponseDTO> removeMember(@PathVariable Long projectId, @PathVariable Long userId) {
+        return new ResponseEntity<>(projectService.removeMember(projectId, userId), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponseDTO> getProjectsById(@PathVariable Long id) {
         return new ResponseEntity<>(projectService.getProjectById(id), HttpStatus.OK);

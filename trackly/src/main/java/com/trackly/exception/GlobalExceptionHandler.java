@@ -61,6 +61,12 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException e) {
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage(), 400, LocalDateTime.now()),
+                HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(Exception e) {
         return new ResponseEntity<>(new ErrorResponse("Internal server error", 500, LocalDateTime.now()),

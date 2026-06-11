@@ -11,7 +11,7 @@ import com.trackly.repository.ProjectRepository;
 import com.trackly.repository.TaskRepository;
 import com.trackly.repository.UserRepository;
 import com.trackly.specification.TaskSpecification;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional ;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,7 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class TaskService {
@@ -50,6 +49,10 @@ public class TaskService {
                 ? userRepository.findById(taskRequestDTO.getAssigneeId())
                 .orElseThrow(() -> new UserNotFoundException(taskRequestDTO.getAssigneeId()))
                 : null;
+        if (assignee != null && !project.getMembers().contains(assignee)) {
+            throw new IllegalArgumentException(
+                    "User " + assignee.getUsername() + " is not a member of project " + project.getId());
+        }
         Task task = taskMapper.taskRequestDtoToTask(taskRequestDTO, project, createdBy, assignee);
         return taskMapper.taskToTaskResponseDto(taskRepository.save(task));
     }
@@ -62,6 +65,10 @@ public class TaskService {
                 ? userRepository.findById(taskRequestDTO.getAssigneeId())
                 .orElseThrow(() -> new UserNotFoundException(taskRequestDTO.getAssigneeId()))
                 : null;
+        if (assignee != null && !project.getMembers().contains(assignee)) {
+            throw new IllegalArgumentException(
+                    "User " + assignee.getUsername() + " is not a member of project " + project.getId());
+        }
         Task updatedTask = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
         updatedTask.setName(taskRequestDTO.getName());
@@ -74,12 +81,14 @@ public class TaskService {
         return taskMapper.taskToTaskResponseDto(taskRepository.save(updatedTask));
     }
 
+    @Transactional(readOnly = true)
     public TaskResponseDTO getTaskById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
         return taskMapper.taskToTaskResponseDto(task);
     }
 
+    @Transactional(readOnly = true)
     public Page<TaskResponseDTO> getTasks(Long projectId, Long assigneeId, TaskStatus status, TaskPriority priority,
                                           LocalDateTime deadline, Pageable pageable) {
         Specification<Task> spec = TaskSpecification.hasProject(projectId)

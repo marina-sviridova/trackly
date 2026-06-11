@@ -9,7 +9,9 @@ import com.trackly.model.Project;
 import com.trackly.model.User;
 import com.trackly.repository.ProjectRepository;
 import com.trackly.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional ;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,7 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
     private final ProjectMapper projectMapper;
+    private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     public ProjectService(ProjectRepository projectRepository, UserRepository userRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
@@ -62,12 +65,41 @@ public class ProjectService {
         return projectMapper.projectToProjectResponseDto(projectRepository.save(project));
     }
 
+    @Transactional
+    public ProjectResponseDTO addMember(Long projectId, Long userId) {
+        log.info("addMember called: projectId={}, userId={}", projectId, userId);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        if (project.getMembers().contains(user)) {
+            throw new IllegalArgumentException("User is already a member of this project");
+        }
+        project.getMembers().add(user);
+        return projectMapper.projectToProjectResponseDto(projectRepository.save(project));
+    }
+
+    @Transactional
+    public ProjectResponseDTO removeMember(Long projectId, Long userId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        if (!project.getMembers().contains(user)) {
+            throw new IllegalArgumentException("User is not a member of this project");
+        }
+        project.getMembers().remove(user);
+        return projectMapper.projectToProjectResponseDto(projectRepository.save(project));
+    }
+
+    @Transactional(readOnly = true)
     public ProjectResponseDTO getProjectById(Long id) {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ProjectNotFoundException(id));
         return projectMapper.projectToProjectResponseDto(project);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProjectResponseDTO> getAllProjects(Pageable pageable) {
         return projectRepository.findAll(pageable)
                 .map(project -> projectMapper.projectToProjectResponseDto(project));
