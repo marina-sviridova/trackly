@@ -76,6 +76,11 @@ public class TaskService {
         updatedTask.setProject(project);
         updatedTask.setAssignee(assignee);
         updatedTask.setStatus(taskRequestDTO.getStatus());
+        if (updatedTask.getStatus().equals(TaskStatus.DONE)) {
+            updatedTask.setCompletedAt(LocalDateTime.now());
+        } else {
+            updatedTask.setCompletedAt(null);
+        }
         updatedTask.setPriority(taskRequestDTO.getPriority());
         updatedTask.setDeadline(taskRequestDTO.getDeadline());
         return taskMapper.taskToTaskResponseDto(taskRepository.save(updatedTask));
