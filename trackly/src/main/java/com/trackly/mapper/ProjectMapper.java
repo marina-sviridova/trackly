@@ -7,7 +7,6 @@ import com.trackly.model.Task;
 import com.trackly.model.User;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -17,7 +16,6 @@ public class ProjectMapper {
         return Project.builder()
                 .name(projectRequestDTO.getName())
                 .manager(manager)
-                .createdAt(LocalDateTime.now())
                 .deadline(projectRequestDTO.getDeadline())
                 .members(members)
                 .active(projectRequestDTO.isActive())

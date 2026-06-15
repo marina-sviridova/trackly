@@ -12,8 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AuthService {
 
@@ -44,6 +42,12 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest registerRequest) {
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            throw new IllegalArgumentException("Username already taken");
+        }
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new IllegalArgumentException("Email already taken");
+        }
         User user = User.builder()
                 .firstName(registerRequest.getFirstName())
                 .lastName(registerRequest.getLastName())
@@ -52,7 +56,6 @@ public class AuthService {
                 .email(registerRequest.getEmail())
                 .role(Role.USER)
                 .active(true)
-                .createdAt(LocalDateTime.now())
                 .build();
         userRepository.save(user);
         String token = jwtService.generateToken(user);
