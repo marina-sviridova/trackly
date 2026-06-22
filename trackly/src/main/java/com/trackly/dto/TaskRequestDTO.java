@@ -2,6 +2,7 @@ package com.trackly.dto;
 
 import com.trackly.model.TaskPriority;
 import com.trackly.model.TaskStatus;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,6 @@ public class TaskRequestDTO {
     TaskStatus status;
     @NotNull
     TaskPriority priority;
+    @Future
     LocalDateTime deadline;
 }

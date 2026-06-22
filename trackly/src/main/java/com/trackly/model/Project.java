@@ -1,6 +1,7 @@
 package com.trackly.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Project {
     User manager;
     @CreationTimestamp
     LocalDateTime createdAt;
+    @Future
     LocalDateTime deadline;
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();

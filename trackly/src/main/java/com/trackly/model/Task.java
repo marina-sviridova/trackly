@@ -1,6 +1,7 @@
 package com.trackly.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +34,7 @@ public class Task {
     TaskPriority priority;
     @CreationTimestamp
     LocalDateTime createdAt;
+    @Future
     LocalDateTime deadline;
     @UpdateTimestamp
     LocalDateTime updatedAt;
